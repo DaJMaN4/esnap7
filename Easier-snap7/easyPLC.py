@@ -21,8 +21,10 @@ class PLC:
         :return: If action was succesful
         """
         try:
+
             self.plc = snap7.client.Client()
             self.plc.connect(IP, rack, slot)
+
             return True
         except:
             raise Exception("failed to establish connection with PLC")
@@ -52,15 +54,14 @@ class PLC:
             if type == "I" or type == "i":
                 reading = self.plc.read_area(snap7.types.Areas.PE, 0, start_address, 1)
                 value = struct.unpack('=c', reading)
-                #print(struct.calcsize(reading))
                 value = int.from_bytes(value[0], "little")
 
-            if type == "M" or type == "m":
+            elif type == "M" or type == "m":
                 reading = self.plc.read_area(snap7.types.Areas.MK, 0, start_address, 1)
                 value = struct.unpack('<B', reading)[0]  # big-endian
 
             else:
-                print("wrong type has been entered")
+                raise Exception("wrong type has been entered")
                 return False
 
             biggest_value = 128
@@ -82,7 +83,7 @@ class PLC:
                     values.append(0)
                 return (values)
             else:
-                return (None)
+                return []
 
         except:
             raise Exception("Failed to read tag")
@@ -90,7 +91,7 @@ class PLC:
 
     def writeBoolTag(self, type: str, start_adress: int, bit: int, value):
         """
-        Writes binary
+        Writes boolean value to choosen tag
 
         :param type: Type of data M/Q
         :param byte: byte of outputs address
@@ -101,16 +102,20 @@ class PLC:
         try:
             if type == "M" or type == "m":
                 data = self.plc.read_area(snap7.types.Areas.MK, 0, start_adress, 1)
+                if get_bool(data, start_adress, bit) == value:
+                    return
                 set_bool(data, start_adress, bit, value)
                 self.plc.write_area(snap7.types.Areas.MK, 0, start_adress, data)
 
-            if type == "Q" or type == "q":
+            elif type == "Q" or type == "q":
                 data = self.plc.read_area(snap7.types.Areas.PA, 0, start_adress, 1)
+                if get_bool(data, start_adress, bit) == value:
+                    return
                 set_bool(data, start_adress, bit, value)
                 self.plc.write_area(snap7.types.Areas.PA, 0, start_adress, data)
 
             else:
-                print("wrong type has been entered")
+                raise Exception("wrong type has been entered")
                 return False
 
         except:
@@ -154,36 +159,95 @@ class PLC:
             raise Exception("Failed to write data to Data Block")
 
 
-    def readNoneBoolTag(self, byte_Number, amount_of_bytes, byte_length, type_of_data):
-        reading = plc.read_area(snap7.types.Areas.MK, 0, byte_Number,  byte_length)
-        if type_of_data == "byte" or "sint" or "char":
-            amount_of_bytes = 1
-        elif type_of_data == "uint" or "word" or "int" or "data":
-            amount_of_bytes = 2
-        elif type_of_data == "udint" or "dword" or "dint" or "real" or "time" or "time_of_day":
-            amount_of_bytes = 4
-        elif type_of_data == "lread":
-            amount_of_bytes = 8
+    def readNoneBoolTag(self, byte_Number, byte_length, type_of_data):
+        """
+
+        :param byte_Number:
+        :param byte_length:
+        :param type_of_data:
+        :return:
+        """
+        reading = self.plc.read_area(snap7.types.Areas.TM, 0, byte_Number,  byte_length)
+
+        if type_of_data == "byte":
+            value = struct.unpack('>B', reading)
+
+        elif type_of_data == "uint":
+            value = struct.unpack('>e', reading)
+
+        elif type_of_data == "word":
+            value = struct.unpack('>H', reading)
+
+        elif type_of_data == "udint" or "dword":
+            value = struct.unpack('>I', reading)
+
+        elif type_of_data == "sint":  # check this
+            value = struct.unpack('>b', reading)
+
+        elif type_of_data == "int":
+            value = struct.unpack('>h', reading)
+
+        elif type_of_data == "dint":
+            value = struct.unpack('>i', reading)
+
+        elif type_of_data == "Uint":
+            value = struct.unpack('>e', reading)
+
+        elif type_of_data == "real":
+            value = struct.unpack('>f', reading)
+
+        elif type_of_data == "lreal":
+            value = struct.unpack('>d', reading)
+
+        elif type_of_data == "char":
+            value = struct.unpack('>c', reading)
+
         else:
             print(type_of_data," type of data isint supported")
 
+        #string
+
+        print(reading)
 
 
-        value = struct.unpack('>f', reading)  # big-endian
+def ifor(checksIn: list, checksFor: list):
+    """
+    If at least on number in checksIn is in ChecksFor
 
-        print('Start Address: ' + str(start_address) + ' Value: ' + str(value))
+    :param checksIn:
+    :param checksFor:
+    :return: Boolean value that represents if the action was succesful
+    """
+    for x in checksIn:
+        if x in checksFor:
+            return True
+    return False
+
+
+def ifand(checksIn: list, checksFor: list):
+    """
+    Check if numbers in checksIn are in checksFor
+
+    :param checksIn:
+    :param checksFor:
+    :return: Boolean value that represents if the action was succesful
+    """
+    for x in checksFor:
+        if x not in checksIn:
+            return False
+    return True
 
 
 """pls = PLC()
 pls.begin('192.168.0.1', 0, 1)
-pls.writeBoolToDB(1, 1, 4, 0)
 
 
+pls.writeBoolTag("q", 0,2,False)
 
-print(pls.readBoolFromDB(1, 0, 0))"""
-
-#print("this",pls.readBoolTag(1, "M"))
-
+list = bytearray()
+print(list)
+print(snap7.util.get_bool(bytearray(0x81), 0, 0))
+"""
 #pls.writeOutput(0,5, True)
 #print(pls.readInput(0))
 #pls.disconnect()

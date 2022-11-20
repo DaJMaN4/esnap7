@@ -159,57 +159,6 @@ class PLC:
             raise Exception("Failed to write data to Data Block")
 
 
-    def readNoneBoolTag(self, byte_Number, byte_length, type_of_data):
-        """
-
-        :param byte_Number:
-        :param byte_length:
-        :param type_of_data:
-        :return:
-        """
-        reading = self.plc.read_area(snap7.types.Areas.TM, 0, byte_Number,  byte_length)
-
-        if type_of_data == "byte":
-            value = struct.unpack('>B', reading)
-
-        elif type_of_data == "uint":
-            value = struct.unpack('>e', reading)
-
-        elif type_of_data == "word":
-            value = struct.unpack('>H', reading)
-
-        elif type_of_data == "udint" or "dword":
-            value = struct.unpack('>I', reading)
-
-        elif type_of_data == "sint":  # check this
-            value = struct.unpack('>b', reading)
-
-        elif type_of_data == "int":
-            value = struct.unpack('>h', reading)
-
-        elif type_of_data == "dint":
-            value = struct.unpack('>i', reading)
-
-        elif type_of_data == "Uint":
-            value = struct.unpack('>e', reading)
-
-        elif type_of_data == "real":
-            value = struct.unpack('>f', reading)
-
-        elif type_of_data == "lreal":
-            value = struct.unpack('>d', reading)
-
-        elif type_of_data == "char":
-            value = struct.unpack('>c', reading)
-
-        else:
-            print(type_of_data," type of data isint supported")
-
-        #string
-
-        print(reading)
-
-
 def ifor(checksIn: list, checksFor: list):
     """
     If at least on number in checksIn is in ChecksFor
@@ -236,18 +185,3 @@ def ifand(checksIn: list, checksFor: list):
         if x not in checksIn:
             return False
     return True
-
-
-"""pls = PLC()
-pls.begin('192.168.0.1', 0, 1)
-
-
-pls.writeBoolTag("q", 0,2,False)
-
-list = bytearray()
-print(list)
-print(snap7.util.get_bool(bytearray(0x81), 0, 0))
-"""
-#pls.writeOutput(0,5, True)
-#print(pls.readInput(0))
-#pls.disconnect()

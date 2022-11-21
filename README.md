@@ -2,7 +2,7 @@
 A library to read Boolean tags from Siemens PLCes, it was tasted just with S7-1200 series. 
 It was made to make using snap7 library easier because I found it unnecessary complicated. 
 
-## How code work: 
+## Info: 
 Tested on linux/windows 
 It communicates by internet. 
 First you need to create new PLC object using class “PLC”, parameters to initiate are 

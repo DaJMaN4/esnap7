@@ -7,6 +7,7 @@ Tested on linux/windows
 It communicates by internet. 
 First you need to create new PLC object using class “PLC”, parameters to initiate are 
 “(IP: str, rack: int, slot: int)” where IP is the IP of your PLC, rack and slot are the integer values of where your PLC is settled on inside TIA portal.
+
 You can create as many PLCs objects as you want. 
 
 ## Methods:
@@ -31,11 +32,7 @@ byte_offset – Byte of the Boolean
 bit_offset – Bit of the Boolean 
 
 writeBoolToDB(db_number: int, byte_offset: int, bit_offset: int, value)
-
 Writes Booleans to DB block
-
 db_number - number of DB block
-
 byte_offset - byte
-
 bit_offset - bit 

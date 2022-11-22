@@ -11,7 +11,9 @@ You can create as many PLCs objects as you want.
 
 ## Methods:
 disconnect()  
+
 Disconnects with PLC 
+
 readBoolTag(start_address: int, type: str) 
 Reads a byte of data and returns list of every 1-state bit. This means that if bits 0, 4, 7 have value of 1 then you will get list [0,4,7]. If none bit has 1-state, then the method returns empty list. 
 start_address – byte

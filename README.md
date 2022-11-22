@@ -31,7 +31,11 @@ byte_offset – Byte of the Boolean
 bit_offset – Bit of the Boolean 
 
 writeBoolToDB(db_number: int, byte_offset: int, bit_offset: int, value)
+
 Writes Booleans to DB block
-db_number – number of DB block
+
+db_number - number of DB block
+
 byte_offset - byte
-bit_offset – bit 
+
+bit_offset - bit 

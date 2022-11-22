@@ -11,7 +11,6 @@ You can create as many PLCs objects as you want.
 
 ## Methods:
 disconnect()  
-
 Disconnects with PLC 
 
 readBoolTag(start_address: int, type: str) 

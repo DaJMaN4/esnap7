@@ -19,25 +19,20 @@ Reads a byte of data and returns list of every 1-state bit. This means that if b
 start_address – byte    
 type – type of data “m” or “q”    
 
-writeBoolTag(type: str, start_adress: int, bit: int, value) 
+writeBoolTag(type: str, start_adress: int, bit: int, value)     
+Writes booleans to individual bits   
+start_adress – byte    
+bit – bit   
+value – Boolean value you want to write to    
 
-Writes booleans to individual bits
+readBoolFromDB(db_number: int, byte_offset: int, bit_offset: int)   
+reads Booleans from DB blocks    
+db_number – number of DB block    
+byte_offset – Byte of the Boolean     
+bit_offset – Bit of the Boolean     
 
-start_adress – byte 
-
-bit – bit  
-
-value – Boolean value you want to write to 
-
-readBoolFromDB(db_number: int, byte_offset: int, bit_offset: int) 
-
-reads Booleans from DB blocks 
-db_number – number of DB block
-byte_offset – Byte of the Boolean 
-bit_offset – Bit of the Boolean 
-
-writeBoolToDB(db_number: int, byte_offset: int, bit_offset: int, value)
-Writes Booleans to DB block
-db_number - number of DB block
-byte_offset - byte
-bit_offset - bit 
+writeBoolToDB(db_number: int, byte_offset: int, bit_offset: int, value)    
+Writes Booleans to DB block    
+db_number - number of DB block   
+byte_offset - byte  
+bit_offset - bit   
